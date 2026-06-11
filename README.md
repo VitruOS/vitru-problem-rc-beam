@@ -2,7 +2,7 @@
 
 Python package for evaluating reinforced concrete beam sections to **AS 3600-2018**. Given a beam geometry and reinforcement layout, it returns factored bending capacity, utilisation, steel ratios, cost, and embodied carbon.
 
-Designed as a standalone evaluation library — use it in your own scripts, parametric studies, or optimisation loops.
+This package is the evaluation core used by the [Vitru](https://vitru.io) multi-objective structural optimisation platform, where it drives parametric design exploration across the Pareto front. It can also be used standalone as a simple callable wrapper — in your own scripts, parametric studies, or custom optimisation loops.
 
 ## Scope
 
