@@ -1,8 +1,0 @@
-Metadata-Version: 2.4
-Name: vitru-problem-rc-beam
-Version: 0.1.0
-Summary: RC beam optimisation problem for Vitru
-Requires-Python: >=3.12
-Requires-Dist: concreteproperties>=0.7.0
-Requires-Dist: sectionproperties>=3.10.2
-Requires-Dist: pyyaml>=6.0.1

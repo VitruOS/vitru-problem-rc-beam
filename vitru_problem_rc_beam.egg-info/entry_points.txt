@@ -1,2 +1,0 @@
-[vitru.problems]
-rc_beam = vitru_problem_rc_beam
