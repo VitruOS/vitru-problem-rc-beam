@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vitru-problem-rc-beam"
+version = "0.1.0"
+description = "RC beam optimisation problem for Vitru"
+requires-python = ">=3.12"
+dependencies = [
+  "concreteproperties>=0.7.0",
+  "sectionproperties>=3.10.2",
+  "pyyaml>=6.0.1",
+]
+
+[project.entry-points."vitru.problems"]
+rc_beam = "vitru_problem_rc_beam"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["vitru_problem_rc_beam*"]
+
+[tool.setuptools.package-data]
+vitru_problem_rc_beam = ["schemas/*.yaml"]
