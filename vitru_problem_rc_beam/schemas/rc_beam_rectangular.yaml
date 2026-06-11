@@ -3,6 +3,7 @@ extends: rc_beam_base
 version: "0.6.0"
 title: "RC beam — rectangular section (AS 3600)"
 tags: [concrete, beam, rectangular, ULS]
+verified: true
 
 # ── VARIABLES ─────────────────────────────────────────────────────────────────
 # Default beam mode: n_bot, n_top free; s_bot_mm, s_top_mm fixed (derived).
