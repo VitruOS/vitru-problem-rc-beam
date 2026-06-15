@@ -86,14 +86,16 @@ def analyse(geometry, inputs: dict) -> dict:
     )
 
     # ── Cost ──────────────────────────────────────────────────────────
-    conc_rate = inputs["unit_cost_concrete_AUD_per_m3"]
-    steel_rate = inputs["unit_cost_steel_AUD_per_kg"]
+    cost_table = inputs["unit_cost_concrete_AUD_per_m3"]
+    conc_rate = _interp_carbon(cost_table, fc)
+    steel_rate = inputs["unit_cost_steel_AUD_per_t"]
     rho_steel = 7850  # kg/m³
 
     vol_conc_per_m = Ag_mm2 / 1e6  # m²  (per metre of beam)
     mass_steel_per_m = (Ast_total_mm2 / 1e6) * rho_steel  # kg/m
+    mass_steel_per_m_t = mass_steel_per_m / 1000  # t/m
 
-    cost_per_m_AUD = vol_conc_per_m * conc_rate + mass_steel_per_m * steel_rate
+    cost_per_m_AUD = vol_conc_per_m * conc_rate + mass_steel_per_m_t * steel_rate
 
     # ── Embodied carbon ───────────────────────────────────────────────
     carbon_table = inputs["carbon_concrete_kgCO2e_per_m3"]

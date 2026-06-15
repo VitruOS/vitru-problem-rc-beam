@@ -65,26 +65,28 @@ parameters:
 
   # -- Cost rates --
   unit_cost_concrete_AUD_per_m3:
-    value: 180.0
+    value_by_grade:
+      "25": 270
+      "32": 300
+      "40": 310
+      "50": 330
+      "65": 350
+      "80": 380
     unit: "AUD/m³"
-    description: "Supplied and placed concrete unit rate"
+    key_unit: "MPa"
+    description: "Supplied and placed concrete unit rate by f'c grade"
     source: "Indicative Sydney 2025 — verify with supplier quote"
-    variable_config:
-      active: false
-      type: continuous
-      bounds: [120.0, 400.0]
-      step: 5.0
 
-  unit_cost_steel_AUD_per_kg:
-    value: 1.80
-    unit: "AUD/kg"
+  unit_cost_steel_AUD_per_t:
+    value: 1800
+    unit: "AUD/t"
     description: "Reinforcing steel supply and fix unit rate"
     source: "Indicative Sydney 2025 — verify with supplier quote"
     variable_config:
       active: false
       type: continuous
-      bounds: [1.20, 3.50]
-      step: 0.10
+      bounds: [1200, 3500]
+      step: 100
 
   # -- Carbon factors --
   carbon_concrete_kgCO2e_per_m3:
@@ -125,6 +127,20 @@ parameters:
     description: "Maximum clear spacing between reinforcing bars"
 
 # ── CONSTRAINTS ───────────────────────────────────────────────────────────────
+
+# linked_constraint_pairs declares ordering relationships between constraints.
+# keys: constraint keys in ascending order of their effective limit value.
+# limit_factors: multiplier to convert stored limit → effective threshold (e.g. -1 for negated lower bounds).
+# Validation rule: effective[0] < effective[1] < ... (strictly ascending).
+linked_parameter_pairs:
+  - keys: [min_clear_spacing_mm, max_clear_spacing_mm]
+    label: "Clear spacing band"
+    description: "Maximum clear spacing must exceed minimum clear spacing (applies to bottom, top, and side face constraints)"
+
+linked_constraint_pairs:
+  - keys: [bending_utilisation_lower, bending_utilisation_upper]
+    label: "Utilisation band"
+    description: "Upper utilisation limit must exceed the lower utilisation limit"
 
 constraints:
   bending_utilisation_upper:
@@ -326,5 +342,15 @@ llm_context: >
     Always include ALL grades in the dict — missing grades revert to defaults.
   - "set all concrete carbon to 200" → set every grade to 200:
     {"parameters": {"carbon_concrete_kgCO2e_per_m3": {"25": 200, "32": 200, "40": 200, "50": 200, "65": 200, "80": 200}}}
+  - "change concrete cost for 40 MPa to 210" → update only that grade:
+    {"parameters": {"unit_cost_concrete_AUD_per_m3": {"25": 160, "32": 180, "40": 210, "50": 225, "65": 265, "80": 310}}}
+    Always include ALL grades in the dict — missing grades revert to defaults.
+  - "set all concrete cost to 190" → set every grade to 190:
+    {"parameters": {"unit_cost_concrete_AUD_per_m3": {"25": 190, "32": 190, "40": 190, "50": 190, "65": 190, "80": 190}}}
 
   Constraints marked locked: true must never be deactivated.
+
+  Clear bar spacing band: controlled by parameters min_clear_spacing_mm and max_clear_spacing_mm.
+  When the user asks to change minimum or maximum clear spacing, ALWAYS update these parameters —
+  never change the limit of the clear spacing constraints (min/max_clear_spacing_*). Those limits
+  are enforcement offsets, not absolute thresholds, and changing them produces misleading display values.

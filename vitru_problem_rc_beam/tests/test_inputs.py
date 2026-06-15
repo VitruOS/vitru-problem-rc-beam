@@ -36,8 +36,8 @@ inputs_rectangular = {
     "M_star_kNm": 500.0,
     "N_star_kN": 0.0,
     "exposure_class": "A1",
-    "unit_cost_concrete_AUD_per_m3": 180.0,
-    "unit_cost_steel_AUD_per_kg": 1.80,
+    "unit_cost_concrete_AUD_per_m3": {"25": 270, "32": 300, "40": 310, "50": 330, "65": 350, "80": 380},
+    "unit_cost_steel_AUD_per_t": 1800,
     "carbon_concrete_kgCO2e_per_m3": {
         "25": 195,
         "32": 225,
@@ -66,8 +66,8 @@ inputs_circular = {
     "M_star_kNm": 500.0,
     "N_star_kN": 0.0,
     "exposure_class": "A1",
-    "unit_cost_concrete_AUD_per_m3": 180.0,
-    "unit_cost_steel_AUD_per_kg": 1.80,
+    "unit_cost_concrete_AUD_per_m3": {"25": 270, "32": 300, "40": 310, "50": 330, "65": 350, "80": 380},
+    "unit_cost_steel_AUD_per_t": 1800,
     "carbon_concrete_kgCO2e_per_m3": {
         "25": 195,
         "32": 225,
@@ -110,8 +110,8 @@ inputs_tee = {
     "M_star_kNm": 500.0,
     "N_star_kN": 0.0,
     "exposure_class": "A1",
-    "unit_cost_concrete_AUD_per_m3": 180.0,
-    "unit_cost_steel_AUD_per_kg": 1.80,
+    "unit_cost_concrete_AUD_per_m3": {"25": 270, "32": 300, "40": 310, "50": 330, "65": 350, "80": 380},
+    "unit_cost_steel_AUD_per_t": 1800,
     "carbon_concrete_kgCO2e_per_m3": {
         "25": 195,
         "32": 225,

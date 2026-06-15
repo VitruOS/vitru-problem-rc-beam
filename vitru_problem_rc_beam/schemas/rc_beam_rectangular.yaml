@@ -181,6 +181,40 @@ parameters:
 # ── CONSTRAINTS ───────────────────────────────────────────────────────────────
 # Spacing constraints here only — universal constraints inherited from base.
 
+# Pairs where effective threshold = referenced_param + limit (not abs(limit)).
+# keys ordered [lower, upper]: effective[lower] < effective[upper] must hold.
+param_threshold_constraint_pairs:
+  - label: "Clear spacing band (bottom)"
+    description: "Max clear spacing must exceed min clear spacing for bottom bars"
+    lower:
+      key: min_clear_spacing_bot
+      param: min_clear_spacing_mm
+      sign: -1   # effective = param - limit  (min constraint: clear_spacing >= param - limit)
+    upper:
+      key: max_clear_spacing_bot
+      param: max_clear_spacing_mm
+      sign: 1    # effective = param + limit  (max constraint: clear_spacing <= param + limit)
+  - label: "Clear spacing band (top)"
+    description: "Max clear spacing must exceed min clear spacing for top bars"
+    lower:
+      key: min_clear_spacing_top
+      param: min_clear_spacing_mm
+      sign: -1
+    upper:
+      key: max_clear_spacing_top
+      param: max_clear_spacing_mm
+      sign: 1
+  - label: "Clear spacing band (side)"
+    description: "Max clear spacing must exceed min clear spacing for side bars"
+    lower:
+      key: min_clear_spacing_side
+      param: min_clear_spacing_mm
+      sign: -1
+    upper:
+      key: max_clear_spacing_side
+      param: max_clear_spacing_mm
+      sign: 1
+
 constraints:
   min_clear_spacing_bot:
     label: "Min clear spacing (bottom)"
