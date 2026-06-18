@@ -128,6 +128,13 @@ def compute_spacing_outputs(inputs: dict) -> dict:
         s_side = None
         clear_side = None
 
+    scores = []
+    if n_bot > 1:
+        scores.append(100.0 * min_clear_bot / clear_bot)
+    if n_top > 1:
+        scores.append(100.0 * min_clear_top / clear_top)
+    congestion_score = max(scores) if scores else 0.0
+
     return {
         "s_bot_mm": s_bot,
         "s_top_mm": s_top,
@@ -140,4 +147,5 @@ def compute_spacing_outputs(inputs: dict) -> dict:
         "min_clear_spacing_side_mm": min_clear_side,
         "b_bot_required_mm": b_bot_required_mm,
         "b_top_required_mm": b_top_required_mm,
+        "congestion_score": congestion_score,
     }

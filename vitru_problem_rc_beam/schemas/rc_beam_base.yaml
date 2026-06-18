@@ -227,6 +227,15 @@ objectives:
     direction: minimise
     active: true
 
+  congestion:
+    label: "Bar congestion"
+    unit: null
+    decimals: 2
+    description: "Worst-layer congestion — 100 = at code-minimum spacing, 50 = comfortable (2× code min), 0 = single bar (N/A), >100 = non-compliant"
+    expression: "congestion_score"
+    direction: minimise
+    active: true
+
 # ── EVALUATE ──────────────────────────────────────────────────────────────────
 
 evaluate:

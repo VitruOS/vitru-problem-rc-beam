@@ -327,6 +327,10 @@ evaluate:
       label: "Clear spacing (top)"
       unit: "mm"
       decimals: 0
+    congestion_score:
+      label: "Congestion score"
+      unit: null
+      decimals: 3
   additional_outputs:
     - clear_spacing_bot_mm
     - clear_spacing_top_mm
@@ -341,6 +345,7 @@ evaluate:
     - s_bot_mm # Returned when in beam mode (derived)
     - s_top_mm # Returned when in beam mode (derived)
     - s_side_mm # Always derived
+    - congestion_score
 
 constraint_overrides:
   cover_requirement:
