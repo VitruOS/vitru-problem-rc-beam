@@ -296,14 +296,15 @@ constraints:
   cover_requirement:
     label: "Concrete cover"
     description: "Nominal cover to tension face must meet exposure class minimum"
-    expression: "cover_min_mm - cover_bot_mm"
+    expression: "cover_min_mm - cover_tension_mm"
     limit: 0.0
     display: "≥ min cover"
     active: true
     locked: true
     standard_clause: "AS 3600 Table 4.10.3"
-    note: cover_bot_mm is resolved from child schema parameters.
-      For circular sections, cover_mm is used instead.
+    note: >
+      cover_tension_mm is the tension-face cover — cover_bot_mm for sagging,
+      cover_top_mm for hogging. For circular sections, cover_mm is used.
 
 # ── EVALUATE OUTPUTS (additional to base) ─────────────────────────────────────
 

@@ -163,8 +163,8 @@ constraints:
 
   flexural_capacity:
     label: "Flexural capacity"
-    description: "Factored moment capacity must meet or exceed M*"
-    expression: "M_star_kNm - phi_Muo_kNm"
+    description: "Factored moment capacity must meet or exceed M* in the direction of loading"
+    expression: "bending_utilisation - 1.0"
     limit: 0.0
     display: "M* ≤ φMuo"
     active: true

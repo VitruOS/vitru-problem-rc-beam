@@ -42,15 +42,21 @@ def analyse(geometry, inputs: dict) -> dict:
     N_star_N = inputs["N_star_kN"] * 1e3
     M_star_kNm = inputs["M_star_kNm"]
 
+    # Negative M* = hogging (tension at top, compression at bottom).
+    # theta=0 is sagging; theta=pi is hogging — must match M* direction so the
+    # solver evaluates capacity on the correct tension face.
+    is_hogging = M_star_kNm < 0
+    theta_analysis = pi if is_hogging else 0
+
     # ── Ultimate bending capacity ─────────────────────────────────────
-    # theta=0: sagging (tension at bottom, compression at top)
-    # n_design: factored axial force in N (compression positive)
     factored, unfactored, phi = dc.ultimate_bending_capacity(
-        theta=0,
+        theta=theta_analysis,
         n_design=N_star_N,
     )
 
-    phi_Muo_kNm = factored.m_xy / 1e6  # N·mm → kN·m
+    # concreteproperties returns m_xy negative for hogging (theta=pi); take
+    # the magnitude so phi_Muo_kNm is always a positive capacity value.
+    phi_Muo_kNm = abs(factored.m_xy) / 1e6  # N·mm → kN·m
     ku = unfactored.k_u  # neutral axis parameter
 
     # ── Gross section properties ──────────────────────────────────────
@@ -64,7 +70,8 @@ def analyse(geometry, inputs: dict) -> dict:
     fc = inputs["fc_MPa"]
     fsy = inputs["fsy_MPa"]
     D_mm = inputs["D_mm"]
-    d_mm = _effective_depth(inputs)
+    # d and tension Ast are both face-dependent — hogging flips the tension face.
+    d_mm = _effective_depth(inputs, is_hogging=is_hogging)
     b_eff_mm = _effective_width(inputs)
 
     # f_ct_f per AS 3600 Cl. 3.1.1.3: 0.6 * sqrt(f'c)
@@ -73,14 +80,14 @@ def analyse(geometry, inputs: dict) -> dict:
     rho_min = max(0.2 * (D_mm / d_mm) ** 2 * (f_ct_f / fsy), 0.0025)
 
     # ── Actual tensile steel ratio ────────────────────────────────────
-    Ast_bot = _ast_bottom(inputs)
-    rho_t = Ast_bot / (b_eff_mm * d_mm)
+    Ast_tension = _ast_tension(inputs, is_hogging=is_hogging)
+    rho_t = Ast_tension / (b_eff_mm * d_mm)
 
     # ── Total steel area (all faces) ──────────────────────────────────
     Ast_total_mm2 = _ast_total(inputs)
 
     # ── Cover outputs ─────────────────────────────────────────────────
-    cover_tension_mm = _cover_tension(inputs)
+    cover_tension_mm = _cover_tension(inputs, is_hogging=is_hogging)
     cover_min_mm = _cover_min(
         inputs["exposure_class"], inputs["fc_MPa"], inputs.get("formwork", "standard")
     )
@@ -119,7 +126,10 @@ def analyse(geometry, inputs: dict) -> dict:
         "Ast_total_mm2": Ast_total_mm2,
         "cost_per_m_AUD": cost_per_m_AUD,
         "carbon_per_m_kgCO2e": carbon_per_m_kgCO2e,
-        "bending_utilisation": M_star_kNm / phi_Muo_kNm,
+        # Always positive: |M*| / φMuo regardless of moment direction.
+        # The flexural_capacity constraint uses bending_utilisation - 1.0 so it
+        # remains correct for both sagging and hogging.
+        "bending_utilisation": abs(M_star_kNm) / phi_Muo_kNm,
     }
 
 
@@ -145,18 +155,23 @@ def _interp_carbon(carbon_table: dict, fc: float) -> float:
     return carbon_table[str(lo)] + t * (carbon_table[str(hi)] - carbon_table[str(lo)])
 
 
-def _effective_depth(inputs: dict) -> float:
+def _effective_depth(inputs: dict, is_hogging: bool = False) -> float:
     """
     Effective depth d — extreme compression fibre to centroid of tension steel.
-    Beam type resolved from available keys.
+    For hogging (negative M*) the tension face flips to the top, so d is measured
+    from the bottom fibre to the centroid of the top bars.
     """
     D = inputs["D_mm"]
 
     if "b_mm" in inputs or "b_w_mm" in inputs:
-        # Rectangular or T-beam — tension steel at bottom
-        cover_bot = inputs["cover_bot_mm"]
-        dia_bot = inputs["dia_bot_mm"]
-        return D - cover_bot - dia_bot / 2
+        # Rectangular or T-beam
+        if is_hogging:
+            cover = inputs["cover_top_mm"]
+            dia = inputs["dia_top_mm"]
+        else:
+            cover = inputs["cover_bot_mm"]
+            dia = inputs["dia_bot_mm"]
+        return D - cover - dia / 2
 
     else:
         # Circular — d = radius + bar ring radius (to centroid of tension bars)
@@ -176,18 +191,22 @@ def _effective_width(inputs: dict) -> float:
         return inputs["D_mm"]  # circular — use diameter as proxy
 
 
-def _cover_tension(inputs: dict) -> float:
+def _cover_tension(inputs: dict, is_hogging: bool = False) -> float:
     """Nominal cover to the tension face bars."""
     if "cover_bot_mm" in inputs:
-        return inputs["cover_bot_mm"]
+        return inputs["cover_top_mm"] if is_hogging else inputs["cover_bot_mm"]
     return inputs["cover_mm"]  # circular
 
 
-def _ast_bottom(inputs: dict) -> float:
-    """Area of tensile (bottom) steel in mm²."""
+def _ast_tension(inputs: dict, is_hogging: bool = False) -> float:
+    """Area of tension-face steel in mm². For hogging that is the top bars."""
     if "n_bot" in inputs:
-        n = inputs["n_bot"]
-        dia = inputs["dia_bot_mm"]
+        if is_hogging:
+            n = inputs["n_top"]
+            dia = inputs["dia_top_mm"]
+        else:
+            n = inputs["n_bot"]
+            dia = inputs["dia_bot_mm"]
         return n * pi * (dia / 2) ** 2
     else:
         # Circular — all bars contribute, use half as tension-side proxy
