@@ -111,7 +111,7 @@ variables:
     label: "Top bar diameter"
     type: discrete
     unit: mm
-    options: [12, 16, 20, 24, 28, 32]
+    options: [12, 16, 20, 24, 28, 32, 36, 40]
     default: 16
     fixed: false
     highlight: true
