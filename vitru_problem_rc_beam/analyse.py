@@ -77,7 +77,7 @@ def analyse(geometry, inputs: dict) -> dict:
     # f_ct_f per AS 3600 Cl. 3.1.1.3: 0.6 * sqrt(f'c)
     f_ct_f = 0.6 * (fc**0.5)
     # TODO: This is currently hard-coded as 0.2 which is only for rectangular sections
-    rho_min = max(0.2 * (D_mm / d_mm) ** 2 * (f_ct_f / fsy), 0.0025)
+    rho_min = 0.2 * (D_mm / d_mm) ** 2 * (f_ct_f / fsy)
 
     # ── Actual tensile steel ratio ────────────────────────────────────
     Ast_tension = _ast_tension(inputs, is_hogging=is_hogging)
