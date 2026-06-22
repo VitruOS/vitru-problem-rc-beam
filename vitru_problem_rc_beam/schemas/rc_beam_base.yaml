@@ -91,12 +91,12 @@ parameters:
   # -- Carbon factors --
   carbon_concrete_kgCO2e_per_m3:
     value_by_grade:
-      "25": 195
-      "32": 225
-      "40": 270
-      "50": 320
-      "65": 370
-      "80": 410
+      "25": 283
+      "32": 323
+      "40": 390
+      "50": 482
+      "65": 491
+      "80": 547
     unit: "kgCO2e/m³"
     key_unit: "MPa"
     description: "Embodied carbon factor for concrete by f'c grade"
