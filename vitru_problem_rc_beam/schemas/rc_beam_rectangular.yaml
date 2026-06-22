@@ -141,6 +141,7 @@ parameters:
       step: 10
 
   n_side_per_face:
+    hidden: true
     value: 0
     unit: null
     description: >
@@ -153,6 +154,7 @@ parameters:
       step: 10
 
   dia_side_mm:
+    hidden: true
     value: 16
     unit: mm
     description: "Diameter of side face bars (only used when n_side_per_face > 0)"
@@ -162,6 +164,7 @@ parameters:
       options: [12, 16, 20]
 
   s_side_mm:
+    hidden: true
     value: null
     unit: mm
     description: >
@@ -170,6 +173,7 @@ parameters:
       Not used as input — present as output only for constraint checking.
 
   cover_side_mm:
+    hidden: true
     value: 30
     unit: mm
     description: "Nominal cover to side face bars"
