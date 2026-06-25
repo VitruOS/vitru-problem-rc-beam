@@ -173,6 +173,8 @@ for D in range(500, 1001, 50):
 - [concreteproperties](https://github.com/robbievanleeuwen/concrete-properties) by Robbie van Leeuwen — section analysis and AS 3600 design code implementation
 - [sectionproperties](https://github.com/robbievanleeuwen/section-properties) by Robbie van Leeuwen — geometry primitives
 
+Full license details for third-party dependencies are in [THIRD_PARTY_LICENSES](./THIRD_PARTY_LICENSES).
+
 ## Development
 
 ```bash
