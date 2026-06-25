@@ -4,7 +4,7 @@ version: "0.5.0"
 title: "RC beam — ultimate bending capacity base (AS 3600)"
 standard: "AS 3600-2018"
 tags: [concrete, beam, ULS]
-author: "Luke Weatherstone"
+author: "Luke Weatherstone | Robbie van Leeuwen"
 description: "Explores RC beam designs under ultimate bending to AS 3600-2018. Navigates tradeoffs between section area and steel area across concrete grade, depth, bar size, and bar count."
 github_url: "https://github.com/VitruOS/vitru-problem-rc-beam"
 
@@ -200,7 +200,7 @@ objectives:
     description: "Combined concrete and steel cost per metre of beam"
     expression: "cost_per_m_AUD"
     direction: minimise
-    active: false
+    active: true
 
   embodied_carbon:
     label: "Embodied carbon"
@@ -208,7 +208,7 @@ objectives:
     description: "Cradle-to-gate carbon per metre of beam"
     expression: "carbon_per_m_kgCO2e"
     direction: minimise
-    active: false
+    active: true
 
   section_area:
     label: "Concrete section area"
@@ -216,7 +216,7 @@ objectives:
     description: "Gross concrete area — proxy for self-weight and formwork"
     expression: "Ag_mm2"
     direction: minimise
-    active: true
+    active: false
 
   steel_area:
     label: "Total steel area"
@@ -225,7 +225,7 @@ objectives:
     description: "Total reinforcement area across all faces"
     expression: "Ast_total_mm2"
     direction: minimise
-    active: true
+    active: false
 
   congestion:
     label: "Bar congestion"
@@ -234,7 +234,7 @@ objectives:
     description: "Worst-layer congestion — 100 = at code-minimum spacing, 50 = comfortable (2× code min), 0 = single bar (N/A), >100 = non-compliant"
     expression: "congestion_score"
     direction: minimise
-    active: true
+    active: false
 
 # ── EVALUATE ──────────────────────────────────────────────────────────────────
 
